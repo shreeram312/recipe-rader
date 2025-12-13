@@ -8,7 +8,7 @@ const envSchema = z.object({
   PORT: z
     .string()
     .refine(
-      (port) => parseInt(port) > 0 && parseInt(port) < 65536,
+      (port: string) => parseInt(port) > 0 && parseInt(port) < 65536,
       "Invalid port number"
     ),
   DATABASE_URL: z.string("Invalid database URL"),
