@@ -4,10 +4,13 @@ import type { Request, Response } from "express";
 import db from "./lib/db";
 import { favouritesTables } from "./db/schema";
 import { and, eq } from "drizzle-orm";
+import job from "./lib/cron";
 
 const app = express();
 
 app.use(express.json());
+
+if (process.env.NODE_ENV === "production") job.start();
 
 app.get("/health", (req: Request, res: Response) => {
   res.json({

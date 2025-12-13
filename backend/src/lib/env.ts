@@ -12,6 +12,7 @@ const envSchema = z.object({
       "Invalid port number"
     ),
   DATABASE_URL: z.string("Invalid database URL"),
+  API_URL: z.string("Invalid API URL"),
 });
 
 type Env = z.infer<typeof envSchema>;
