@@ -1,0 +1,35 @@
+{
+  "name": "backend",
+  "version": "1.0.0",
+  "description": "Backend for the project",
+  "main": "src/index.ts",
+  "type": "module",
+  "scripts": {
+    "dev": "tsx watch  src/index.ts",
+    "start": "tsx src/index.ts",
+    "build": "tsc",
+    "db:generate": "drizzle-kit generate --config=src/drizzle.config.ts",
+    "db:migrate": "drizzle-kit migrate --config=src/drizzle.config.ts",
+    "db:studio": "drizzle-kit studio --config=src/drizzle.config.ts",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@types/express": "^5.0.6",
+    "@types/node": "^22.0.0",
+    "drizzle-kit": "^0.31.8",
+    "drizzle-orm": "^0.45.1",
+    "tsx": "^4.19.2",
+    "typescript": "^5.9.3"
+  },
+  "dependencies": {
+    "@neondatabase/serverless": "^1.0.2",
+    "cors": "^2.8.5",
+    "cron": "^4.4.0",
+    "dotenv": "^17.2.3",
+    "express": "^5.2.1",
+    "zod": "^4.1.13"
+  }
+}
