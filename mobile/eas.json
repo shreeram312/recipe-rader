@@ -12,7 +12,10 @@
       }
     },
     "preview": {
-      "distribution": "internal"
+      "distribution": "internal",
+      "env": {
+        "EXPO_PUBLIC_CLERK_PUBLISHABLE_KEY": "EXPO_PUBLIC_CLERK_PUBLISHABLE_KEY"
+      }
     },
     "production": {
       "autoIncrement": true
