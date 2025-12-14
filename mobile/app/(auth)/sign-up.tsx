@@ -16,6 +16,8 @@ import { Image } from "expo-image";
 import { COLORS } from "@/constants/colors";
 import { Ionicons } from "@expo/vector-icons";
 
+import VerifyEmail from "./verify-email";
+
 const SignUpScreen = () => {
   const router = useRouter();
   const { isLoaded, signUp } = useSignUp();
@@ -35,6 +37,7 @@ const SignUpScreen = () => {
       Alert.alert("Error", "Password must be at least 6 characters long");
       return;
     }
+    setLoading(true);
 
     if (!isLoaded) return;
     try {
@@ -57,9 +60,7 @@ const SignUpScreen = () => {
 
   if (pendingVerification) {
     return (
-      <View>
-        <Text>A verification email has been sent to your email address.</Text>
-      </View>
+      <VerifyEmail email={email} onBack={() => setPendingVerification(false)} />
     );
   }
 
