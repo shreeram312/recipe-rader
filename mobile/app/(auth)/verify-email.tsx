@@ -37,7 +37,7 @@ const VerifyEmail = ({
 
       if (signUpAttempt.status === "complete") {
         await setActive({ session: signUpAttempt.createdSessionId });
-        router.replace("/(tabs)/index");
+        router.push("/(tabs)");
       } else {
         console.log(JSON.stringify(signUpAttempt, null, 2));
         Alert.alert("Error", "Invalid code");
