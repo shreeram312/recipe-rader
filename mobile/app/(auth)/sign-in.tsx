@@ -41,8 +41,10 @@ const SignInScreen = () => {
 
       if (signInAttempt.status === "complete") {
         await setActive({ session: signInAttempt.createdSessionId });
+        router.replace("/(tabs)/favourites"); // redirect to home screen
       } else {
         Alert.alert("Error", "Failed to sign in");
+        console.log(signInAttempt);
       }
     } catch (error) {
       console.error(error);
