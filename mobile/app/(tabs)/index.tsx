@@ -5,7 +5,7 @@ import { useUser } from "@clerk/clerk-expo";
 const IndexScreen = () => {
   const { user } = useUser();
   if (!user) return null;
-  console.log(user);
+
   return (
     <View>
       <ScrollView>
