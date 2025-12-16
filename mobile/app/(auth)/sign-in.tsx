@@ -41,10 +41,9 @@ const SignInScreen = () => {
 
       if (signInAttempt.status === "complete") {
         await setActive({ session: signInAttempt.createdSessionId });
-        router.replace("/(tabs)/favourites"); // redirect to home screen
+        router.replace("/(tabs)"); // redirect to home screen
       } else {
         Alert.alert("Error", "Failed to sign in");
-        console.log(signInAttempt);
       }
     } catch (error) {
       console.error(error);
@@ -61,6 +60,7 @@ const SignInScreen = () => {
         keyboardVerticalOffset={Platform.OS === "ios" ? 64 : 35}
       >
         <ScrollView
+          keyboardShouldPersistTaps="handled"
           contentContainerStyle={authStyles.scrollContent}
           showsVerticalScrollIndicator={false}
         >
@@ -68,9 +68,9 @@ const SignInScreen = () => {
             <Image
               source={require("@/assets/images/i1.png")}
               style={authStyles.image}
-              //   contentFit="contain"
             />
           </View>
+          <Text style={authStyles.subtitle}>Recipe Finder</Text>
           <Text style={authStyles.title}>Welcome Back</Text>
 
           {/* form container */}

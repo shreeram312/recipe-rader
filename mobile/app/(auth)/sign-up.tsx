@@ -25,15 +25,16 @@ const SignUpScreen = () => {
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [name, setName] = useState("");
   const [pendingVerification, setPendingVerification] = useState(false);
 
   const handleSignUp = async () => {
-    if (!email || !password) {
+    if (!email || !password || !name) {
       Alert.alert("Error", "Please fill in all fields");
       return;
     }
 
-    if (password.length < 6) {
+    if (password.length < 8) {
       Alert.alert("Error", "Password must be at least 6 characters long");
       return;
     }
@@ -43,6 +44,8 @@ const SignUpScreen = () => {
     try {
       const completeSignUp = await signUp.create({
         emailAddress: email,
+        firstName: name.split(" ")[0],
+        lastName: name.split(" ")[1],
         password,
       });
 
@@ -72,6 +75,7 @@ const SignUpScreen = () => {
         keyboardVerticalOffset={Platform.OS === "ios" ? 64 : 35}
       >
         <ScrollView
+          keyboardShouldPersistTaps="handled"
           contentContainerStyle={authStyles.scrollContent}
           showsVerticalScrollIndicator={false}
         >
@@ -81,8 +85,20 @@ const SignUpScreen = () => {
               style={authStyles.image}
             />
           </View>
+
           <Text style={authStyles.title}>Create an Account</Text>
           <View style={authStyles.formContainer}>
+            <View style={authStyles.inputContainer}>
+              <TextInput
+                placeholder="Enter your name"
+                value={name}
+                placeholderTextColor={COLORS.textLight}
+                onChangeText={setName}
+                keyboardType="default"
+                autoCapitalize="none"
+                style={authStyles.textInput}
+              />
+            </View>
             <View style={authStyles.inputContainer}>
               <TextInput
                 placeholder="Enter your email"

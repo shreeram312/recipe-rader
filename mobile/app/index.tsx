@@ -9,15 +9,6 @@ const Index = () => {
     return null;
   }
 
-  console.log(isSignedIn, "isSignedIn");
-
-  if (!isSignedIn) {
-    return <Redirect href={"/(auth)/sign-in"} />;
-  }
-
-  if (isSignedIn) {
-    return <Redirect href={"/(tabs)"} />;
-  }
+  return <Redirect href={"/(tabs)"} />;
 };
-
 export default Index;

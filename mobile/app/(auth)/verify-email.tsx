@@ -57,6 +57,7 @@ const VerifyEmail = ({
         keyboardVerticalOffset={Platform.OS === "ios" ? 64 : 35}
       >
         <ScrollView
+          keyboardShouldPersistTaps="handled"
           contentContainerStyle={authStyles.scrollContent}
           showsVerticalScrollIndicator={false}
         >
