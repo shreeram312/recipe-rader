@@ -1,5 +1,6 @@
+import type { RawMealData, TransformedMealData } from "@/types/meals";
+
 const BASE_URL = process.env.EXPO_PUBLIC_API_URL as string;
-console.log(BASE_URL);
 
 export const MEAL_API = {
   searchMealsByName: async (name: string) => {
@@ -30,10 +31,11 @@ export const MEAL_API = {
     try {
       const response = await fetch(`${BASE_URL}/random.php`);
       const data = await response.json();
-      return data.meals || data.measl[0];
+      // TheMealDB API returns { meals: [meal] } for random endpoint
+      return data.meals?.[0] || null;
     } catch (error) {
       console.error(error, "Error getting random meal");
-      return [];
+      return null;
     }
   },
 
@@ -87,14 +89,18 @@ export const MEAL_API = {
     }
   },
 
-  transformMealData: (meal: any) => {
+  transformMealData: (
+    meal: RawMealData | null | undefined
+  ): TransformedMealData | null => {
     if (!meal) return null;
 
     // extract ingredients from the meal object
-    const ingredients = [];
+    const ingredients: string[] = [];
     for (let i = 1; i <= 20; i++) {
-      const ingredient = meal[`strIngredient${i}`];
-      const measure = meal[`strMeasure${i}`];
+      const ingredientKey = `strIngredient${i}` as keyof RawMealData;
+      const measureKey = `strMeasure${i}` as keyof RawMealData;
+      const ingredient = meal[ingredientKey] as string | null | undefined;
+      const measure = meal[measureKey] as string | null | undefined;
       if (ingredient && ingredient.trim()) {
         const measureText =
           measure && measure.trim() ? `${measure.trim()} ` : "";
@@ -103,7 +109,7 @@ export const MEAL_API = {
     }
 
     // extract instructions
-    const instructions = meal.strInstructions
+    const instructions: string[] = meal.strInstructions
       ? meal.strInstructions
           .split(/\r?\n/)
           .filter((step: string) => step.trim())
