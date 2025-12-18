@@ -3,8 +3,7 @@ import { useAuth } from "@clerk/clerk-expo";
 
 export default function AuthRoutesLayout() {
   const { isSignedIn } = useAuth();
-
-  if (isSignedIn) return <Redirect href={"/(tabs)"} />;
+  if (isSignedIn) return <Redirect href={"/(tabs)/search"} />;
 
   return <Stack screenOptions={{ headerShown: false }} />;
 }
