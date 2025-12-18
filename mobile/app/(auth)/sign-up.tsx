@@ -53,9 +53,28 @@ const SignUpScreen = () => {
         strategy: "email_code",
       });
       setPendingVerification(true);
-    } catch (error) {
-      console.error(JSON.stringify(error, null, 2));
-      Alert.alert("Error", "Failed to sign up");
+    } catch (error: any) {
+      console.error("Sign up error:", JSON.stringify(error, null, 2));
+      
+      // Provide more specific error messages
+      let errorMessage = "Failed to sign up. Please try again.";
+      
+      if (error?.errors && error.errors.length > 0) {
+        const clerkError = error.errors[0];
+        if (clerkError?.code === "form_identifier_exists") {
+          errorMessage = "An account with this email already exists. Please sign in instead.";
+        } else if (clerkError?.code === "form_password_pwned") {
+          errorMessage = "This password has been found in a data breach. Please choose a different password.";
+        } else if (clerkError?.code === "form_password_length_too_short") {
+          errorMessage = "Password is too short. Please use at least 8 characters.";
+        } else if (clerkError?.message) {
+          errorMessage = clerkError.message;
+        }
+      } else if (error?.message) {
+        errorMessage = error.message;
+      }
+      
+      Alert.alert("Sign Up Failed", errorMessage);
     } finally {
       setLoading(false);
     }

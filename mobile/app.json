@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "Recipe-Radar",
-    "slug": "mobile",
+    "name": "Recipe-Finder",
+    "slug": "recipe-finder",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/i2.png",
@@ -22,7 +22,7 @@
       },
       "edgeToEdgeEnabled": true,
       "predictiveBackGestureEnabled": false,
-      "package": "com.anonymous.mobile"
+      "package": "com.recipefinder.mobile"
     },
     "web": {
       "output": "static",

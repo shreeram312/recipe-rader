@@ -43,11 +43,26 @@ const SignInScreen = () => {
         await setActive({ session: signInAttempt.createdSessionId });
         router.replace("/(tabs)"); // redirect to home screen
       } else {
-        Alert.alert("Error", "Failed to sign in");
+        Alert.alert("Error", "Failed to sign in. Please try again.");
       }
-    } catch (error) {
-      console.error(error);
-      Alert.alert("Error", "Something went wrong");
+    } catch (error: any) {
+      console.error("Sign in error:", error);
+      
+      // Provide more specific error messages
+      let errorMessage = "Something went wrong. Please try again.";
+      
+      if (error?.errors && error.errors.length > 0) {
+        const clerkError = error.errors[0];
+        if (clerkError?.code === "form_identifier_not_found" || clerkError?.code === "form_password_incorrect") {
+          errorMessage = "Invalid email or password. Please check your credentials.";
+        } else if (clerkError?.message) {
+          errorMessage = clerkError.message;
+        }
+      } else if (error?.message) {
+        errorMessage = error.message;
+      }
+      
+      Alert.alert("Sign In Failed", errorMessage);
     } finally {
       setLoading(false);
     }
