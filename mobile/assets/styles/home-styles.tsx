@@ -97,7 +97,7 @@ export const homeStyles = StyleSheet.create({
     fontWeight: "600",
   },
   recipesSection: {
-    paddingHorizontal: 20,
+    paddingHorizontal: 16,
     marginTop: 8,
   },
   sectionHeader: {

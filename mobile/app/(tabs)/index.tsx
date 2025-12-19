@@ -6,10 +6,10 @@ import {
   TouchableOpacity,
   FlatList,
 } from "react-native";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useUser } from "@clerk/clerk-expo";
 import { useRouter } from "expo-router";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { MEAL_API } from "@/services/meal-api";
 import { TransformedMealData } from "@/types/meals";
 import { homeStyles } from "@/assets/styles/home-styles";
@@ -20,6 +20,7 @@ import RecipeCard from "@/components/recipe-card";
 import CategoryFilter from "@/components/category-filter";
 import LoadingSpinner from "@/components/loading-spinner";
 
+const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 const IndexScreen = () => {
   const { user } = useUser();
   if (!user) return null;
@@ -30,7 +31,7 @@ const IndexScreen = () => {
     []
   );
 
-  const { data, isLoading, error } = useQuery({
+  const { data, isLoading, error, refetch } = useQuery({
     queryKey: ["home-data"],
     queryFn: async () => {
       const [allCategories, allRecipes, featuredMeal] = await Promise.all([
@@ -71,6 +72,16 @@ const IndexScreen = () => {
   const categories = data?.categories || [];
   const recipes = data?.recipes || [];
   const featuredRecipe = data?.featuredRecipe || null;
+  const queryClient = useQueryClient();
+
+  // Auto-select first category when data loads
+  useEffect(() => {
+    if (categories.length > 0 && selectedCategory === "") {
+      const firstCategory = categories[0].name;
+      setSelectedCategory(firstCategory);
+      loadCategoryData(firstCategory);
+    }
+  }, [categories]);
 
   if (isLoading) {
     return <LoadingSpinner />;
@@ -94,6 +105,16 @@ const IndexScreen = () => {
       );
     setFilteredRecipes(transformedMeals);
   };
+  const handleCategorySelect = async (category: string) => {
+    if (category === selectedCategory) {
+      // If clicking the same category, deselect it
+      setSelectedCategory("");
+      setFilteredRecipes([]);
+      return;
+    }
+    setSelectedCategory(category);
+    await loadCategoryData(category);
+  };
 
   const loadIngredientData = async (ingredient: string) => {
     const ingredients = await MEAL_API.filterByIngredient(ingredient);
@@ -113,7 +134,13 @@ const IndexScreen = () => {
       <ScrollView
         showsVerticalScrollIndicator={false}
         refreshControl={
-          <RefreshControl refreshing={isLoading} onRefresh={() => {}} />
+          <RefreshControl
+            refreshing={isLoading}
+            onRefresh={async () => {
+              await sleep(2000);
+              queryClient.refetchQueries({ queryKey: ["home-data"] });
+            }}
+          />
         }
         contentContainerStyle={homeStyles.scrollContent}
       >
@@ -213,18 +240,20 @@ const IndexScreen = () => {
           <CategoryFilter
             categories={categories}
             selectedCategory={selectedCategory}
-            onSelectCategory={loadCategoryData}
+            onSelectCategory={handleCategorySelect}
           />
         )}
 
         <View style={homeStyles.recipesSection}>
           <View style={homeStyles.sectionHeader}>
-            <Text style={homeStyles.sectionTitle}>{selectedCategory}</Text>
+            <Text style={homeStyles.sectionTitle}>
+              {selectedCategory || "All Recipes"}
+            </Text>
           </View>
 
-          {recipes.length > 0 ? (
+          {displayRecipes.length > 0 ? (
             <FlatList
-              data={recipes}
+              data={displayRecipes}
               renderItem={({ item }) => <RecipeCard recipe={item} />}
               keyExtractor={(item) => item.id.toString()}
               numColumns={2}
