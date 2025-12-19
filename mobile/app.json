@@ -1,7 +1,7 @@
 {
   "expo": {
     "name": "Recipe-Finder",
-    "slug": "recipe-finder",
+    "slug": "mobile",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/i2.png",
