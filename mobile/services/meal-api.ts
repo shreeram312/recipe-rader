@@ -6,7 +6,7 @@ export const MEAL_API = {
   searchMealsByName: async (name: string) => {
     try {
       const response = await fetch(
-        `${BASE_URL}/search.php?s=en${encodeURIComponent(name)}`
+        `${BASE_URL}/search.php?s=${encodeURIComponent(name)}`
       );
       const data = await response.json();
       return data.meals || [];

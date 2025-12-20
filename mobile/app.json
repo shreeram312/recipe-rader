@@ -14,7 +14,7 @@
     "splash": {
       "image": "./assets/images/splash-icon-light.png",
       "resizeMode": "contain",
-      "backgroundColor": "#2F80ED"
+      "backgroundColor": "#ffffff"
     },
     "android": {
       "adaptiveIcon": {
