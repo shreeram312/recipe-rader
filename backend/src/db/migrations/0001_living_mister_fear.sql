@@ -1,0 +1,1 @@
+ALTER TABLE "favourites" ADD COLUMN "is_saved" boolean DEFAULT false NOT NULL;
