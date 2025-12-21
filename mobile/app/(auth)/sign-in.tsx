@@ -47,21 +47,25 @@ const SignInScreen = () => {
       }
     } catch (error: any) {
       console.error("Sign in error:", error);
-      
+
       // Provide more specific error messages
       let errorMessage = "Something went wrong. Please try again.";
-      
+
       if (error?.errors && error.errors.length > 0) {
         const clerkError = error.errors[0];
-        if (clerkError?.code === "form_identifier_not_found" || clerkError?.code === "form_password_incorrect") {
-          errorMessage = "Invalid email or password. Please check your credentials.";
+        if (
+          clerkError?.code === "form_identifier_not_found" ||
+          clerkError?.code === "form_password_incorrect"
+        ) {
+          errorMessage =
+            "Invalid email or password. Please check your credentials.";
         } else if (clerkError?.message) {
           errorMessage = clerkError.message;
         }
       } else if (error?.message) {
         errorMessage = error.message;
       }
-      
+
       Alert.alert("Sign In Failed", errorMessage);
     } finally {
       setLoading(false);
@@ -85,7 +89,7 @@ const SignInScreen = () => {
               style={authStyles.image}
             />
           </View>
-          <Text style={authStyles.subtitle}>Recipe Finder</Text>
+          <Text style={authStyles.subtitle}>Recipe Radar</Text>
           <Text style={authStyles.title}>Welcome Back</Text>
 
           {/* form container */}

@@ -1,7 +1,7 @@
 import { StyleSheet } from "react-native";
 import { COLORS } from "../../constants/colors";
 
-export const favoritesStyles = StyleSheet.create({
+export const favouriteStyles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: COLORS.background,

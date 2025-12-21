@@ -1,11 +1,15 @@
-import { View, Text } from "react-native";
+import { View, Text, ScrollView, FlatList, RefreshControl } from "react-native";
 import React, { useState } from "react";
 import { useAuth, useUser } from "@clerk/clerk-expo";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
+import LoadingSpinner from "@/components/loading-spinner";
+import { favouriteStyles } from "@/assets/styles/favourite-styles";
+import RecipeCard from "@/components/recipe-card";
+import EmptyFavouritesComponent from "@/components/empty-favourites";
 
 const FavouritesScreen = () => {
   const { user } = useUser();
-
+  const queryClient = useQueryClient();
   const {
     data: favouriteRecipes,
     isLoading,
@@ -18,15 +22,52 @@ const FavouritesScreen = () => {
         `${process.env.EXPO_PUBLIC_BACKEND_API_URL}/api/favourites/${user?.id}`
       );
       const data = await response.json();
-      return data;
+      const transformedData = data.map((recipe: any) => ({
+        ...recipe,
+        id: recipe.recipeId,
+      }));
+      return transformedData;
     },
   });
 
-  console.log(favouriteRecipes);
-
+  if (isLoading) {
+    return <LoadingSpinner message="Loading your favourite recipes..." />;
+  }
+  if (isError) {
+    return <Text>Error: {isError.toString()}</Text>;
+  }
   return (
-    <View>
-      <Text>FavouritesScreen</Text>
+    <View style={favouriteStyles.container}>
+      <ScrollView
+        refreshControl={
+          <RefreshControl
+            refreshing={isLoading}
+            onRefresh={() => {
+              queryClient.refetchQueries({
+                queryKey: ["favourites", user?.id],
+              });
+            }}
+          />
+        }
+        showsVerticalScrollIndicator={false}
+      >
+        <View style={favouriteStyles.header}>
+          <Text style={favouriteStyles.title}>Favourites</Text>
+        </View>
+        <View style={favouriteStyles.recipesSection}>
+          <FlatList
+            data={favouriteRecipes}
+            renderItem={({ item }) => <RecipeCard recipe={item} />}
+            keyExtractor={(item) => item.id}
+            numColumns={2}
+            columnWrapperStyle={favouriteStyles.row}
+            contentContainerStyle={favouriteStyles.recipesGrid}
+            showsVerticalScrollIndicator={false}
+            scrollEnabled={false}
+            ListEmptyComponent={<EmptyFavouritesComponent />}
+          />
+        </View>
+      </ScrollView>
     </View>
   );
 };

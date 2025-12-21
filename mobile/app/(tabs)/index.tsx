@@ -173,7 +173,7 @@ const IndexScreen = () => {
             <TouchableOpacity
               style={homeStyles.featuredCard}
               activeOpacity={0.8}
-              onPress={() => router.push(`/`)}
+              onPress={() => router.push(`/recipe/${featuredRecipe.id}`)}
             >
               <View style={homeStyles.featuredImageContainer}>
                 <Image

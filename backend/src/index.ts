@@ -28,6 +28,24 @@ app.post("/api/favourites", async (req: Request, res: Response) => {
       return res.status(400).json({ message: "Missing required fields" });
     }
 
+    const existingFavourite = await db
+      .select()
+      .from(favouritesTables)
+      .where(
+        and(
+          eq(favouritesTables.userId, userId),
+          eq(favouritesTables.recipeId, recipeId)
+        )
+      )
+      .limit(1);
+
+    if (existingFavourite.length > 0) {
+      return res.status(200).json({
+        message: "Recipe already in favourites",
+        favourite: existingFavourite[0],
+      });
+    }
+
     const favourite = await db
       .insert(favouritesTables)
       .values({
@@ -74,6 +92,7 @@ app.delete(
           .status(400)
           .json({ message: "Missing userId or recipeId parameter" });
       }
+
       await db
         .delete(favouritesTables)
         .where(

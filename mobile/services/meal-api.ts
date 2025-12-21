@@ -20,10 +20,11 @@ export const MEAL_API = {
     try {
       const response = await fetch(`${BASE_URL}/lookup.php?i=${id}`);
       const data = await response.json();
-      return data.meals || data.meal[0];
+      // TheMealDB API returns { meals: [meal] } for lookup endpoint
+      return data.meals?.[0] || null;
     } catch (error) {
       console.error(error, "Error getting meal by id");
-      return [];
+      return null;
     }
   },
 
