@@ -10,7 +10,7 @@ const app = express();
 
 app.use(express.json());
 
-if (process.env.NODE_ENV === "production") job.start();
+// if (process.env.NODE_ENV === "production") job.start();
 
 app.get("/health", (req: Request, res: Response) => {
   res.json({
